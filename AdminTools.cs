@@ -7,7 +7,7 @@ public class AdminTools
     public static List<Question> QuestionList = new List<Question>();
     public static void AddQuestion()
     {
-        Console.WriteLine("Välj typ av fråga:\n1. Flervalsalternativ\n2. Fritext");
+        Console.WriteLine("Välj typ av fråga:\n1. Flervalsalternativ\n2. Fritext\n3. 1-10");
         int type = Convert.ToInt32(Console.ReadLine());
         Console.Write("Hur lyder frågan?: ");
         string q = Console.ReadLine()!;
@@ -43,7 +43,20 @@ public class AdminTools
             case 2:
                 Console.Write("Vad är det korrekta svaret?: ");
                 string answer2 = Console.ReadLine()!;
-                QuestionList.Add(new FreeText(q, p, answer2.ToLower()));
+                QuestionList.Add(new FreeText(q, p, answer2));
+            break;
+            case 3:
+                List<string> options2 = new List<string>();
+                Console.WriteLine("Skriv in svarsalternativ.");
+                for(int i = 1; i <= 10; i++)
+                {
+                    Console.Write($"svar {i}: ");
+                    string userInput = Console.ReadLine()!;
+                    options2.Add(userInput);
+                }
+                Console.Write("Vilket alternativ är rätt?: ");
+                int answer3 = Convert.ToInt32(Console.ReadLine());
+                QuestionList.Add(new OneToTen(q, p, answer3, options2));
             break;
         }
     }

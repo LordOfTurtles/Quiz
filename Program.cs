@@ -8,10 +8,24 @@ class Program
         bool isRunning = true;
         while(isRunning)
         {
-            AdminTools.AddQuestion();
-            foreach(Question q in AdminTools.QuestionList)
+            Console.WriteLine("========Välj alternativ========");
+            Console.WriteLine("[S]pela frågesport\n[L]ägg till fråga\n[A]vsluta");
+            Console.Write("Val: ");
+            string userInput = Console.ReadLine()!;
+            switch(userInput.ToLower())
             {
-                q.AskQuestion();
+                case "s":
+                    Game.PlayGame();
+                break;
+                case "l":
+                    AdminTools.AddQuestion();
+                break;
+                case "a":
+                    isRunning = false;
+                break;
+                default:
+                    Console.WriteLine("Ogiltigt alternativ");
+                break;
             }
         }
     }
