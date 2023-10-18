@@ -5,58 +5,26 @@ namespace Quiz;
 public class AdminTools
 {
     public static List<Question> QuestionList = new List<Question>();
-    public static void AddQuestion()
+    public static void AddQuestion(int type, string question, int points, string stringAnswer, List<string> options)
     {
-        Console.WriteLine("Välj typ av fråga:\n1. Flervalsalternativ\n2. Fritext\n3. 1-10");
-        int type = Convert.ToInt32(Console.ReadLine());
-        Console.Write("Hur lyder frågan?: ");
-        string q = Console.ReadLine()!;
-        Console.Write("Hur många poäng är frågan värd?: ");
-        int p = Convert.ToInt32(Console.ReadLine());
         switch(type)
         {
             case 1:
-                List<string> options = new List<string>();
-                Console.WriteLine("Skriv in svarsalternativ. Skriv 'stop' för att avsluta");
-                bool isRunning = true;
-                while(isRunning)
-                {
-                    Console.Write($"Alternativ {options.Count+1}: ");
-                    string userInput = Console.ReadLine()!;
-                    if(userInput.ToLower() == "stop")
-                    {   
-                        isRunning = false;
-                    }
-                    else
-                    {
-                        options.Add(userInput);
-                    }
-                }
-                for(int i = 0; i < options.Count; i++)
-                {
-                    Console.WriteLine($"{i+1}. {options[i]}");
-                }
-                Console.Write("Vilket alternativ är rätt?: ");
-                int answer1 = Convert.ToInt32(Console.ReadLine());
-                QuestionList.Add(new MultipleChoice(q, p, answer1, options));
+            {
+                int intAnswer = Convert.ToInt32(stringAnswer);
+                QuestionList.Add(new MultipleChoice(question, points, intAnswer, options));
+            }
             break;
             case 2:
-                Console.Write("Vad är det korrekta svaret?: ");
-                string answer2 = Console.ReadLine()!;
-                QuestionList.Add(new FreeText(q, p, answer2));
+            {
+                QuestionList.Add(new FreeText(question, points, stringAnswer));
+            }
             break;
             case 3:
-                List<string> options2 = new List<string>();
-                Console.WriteLine("Skriv in svarsalternativ.");
-                for(int i = 1; i <= 10; i++)
-                {
-                    Console.Write($"svar {i}: ");
-                    string userInput = Console.ReadLine()!;
-                    options2.Add(userInput);
-                }
-                Console.Write("Vilket alternativ är rätt?: ");
-                int answer3 = Convert.ToInt32(Console.ReadLine());
-                QuestionList.Add(new OneToTen(q, p, answer3, options2));
+            {
+                int intAnswer = Convert.ToInt32(stringAnswer);
+                QuestionList.Add(new OneToTen(question, points, intAnswer, options));
+            }
             break;
         }
     }
