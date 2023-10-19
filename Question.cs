@@ -1,18 +1,22 @@
+using System.ComponentModel;
+
 namespace Quiz;
 public class Question
 {
-    public string? Body{get; set;}
+    public string Body{get; set;}
     public int Points{get; set;}
     public Question(string body, int points)
     {
         Body = body;
         Points = points;
     }
-    public virtual void AskQuestion(out int score)
+    public override string ToString()
     {
-        score = 0;
-        Console.WriteLine(Body);
-        Console.WriteLine("Poäng: " + Points);
+        return $"Fråga: {Body}\nPoäng: {Points}";
+    }
+    public virtual bool CheckAnswer(string userInput)
+    {
+        return false;
     }
 }
 class MultipleChoice : Question
@@ -24,24 +28,22 @@ class MultipleChoice : Question
         Answer = answer;
         Options = options;
     }
-    public override void AskQuestion(out int score)
+    public override string ToString()
     {
-        base.AskQuestion(out score);
+        string optionList = "\nSvarsalternativ:";
         for(int i = 0; i < Options.Count; i++)
         {
-            Console.WriteLine($"{i+1}. {Options[i]}");
+            optionList += $"\n{i+1}. {Options[i]}";
         }
-        Console.Write($"Välj alternativ (1-{Options.Count}): ");
-        int userInput = Convert.ToInt32(Console.ReadLine());
-        if(userInput == Answer)
-        {
-            Console.WriteLine("Korrekt! Hurra!");
-            score = Points;
-        }
+        return base.ToString() + optionList;
+    }
+    public override bool CheckAnswer(string userInput)
+    {
+        int intAnswer = Convert.ToInt32(userInput);
+        if(intAnswer == Answer)
+            return true;
         else
-        {
-            Console.WriteLine("Fel! Fan va dålig du e");
-        }
+            return false;
     }
 }
 class FreeText : Question
@@ -51,20 +53,12 @@ class FreeText : Question
     {
         Answer = answer;
     }
-    public override void AskQuestion(out int score)
+    public override bool CheckAnswer(string userInput)
     {
-        base.AskQuestion(out score);
-        Console.Write("Svar: ");
-        string userInput = Console.ReadLine()!;
         if(userInput.ToLower() == Answer.ToLower())
-        {
-            Console.WriteLine("Korrekt! Hurra!");
-            score = Points;
-        }
+            return true;
         else
-        {
-            Console.WriteLine("Fel! Fan va dålig du e");
-        }
+            return false;
     }
 }
 class OneToTen : Question
@@ -76,23 +70,74 @@ class OneToTen : Question
         Answer = answer;
         Options = options;
     }
-    public override void AskQuestion(out int score)
+    public override string ToString()
     {
-        base.AskQuestion(out score);
+        string optionList = "\nSvarsalternativ:";
         for(int i = 1; i <= 10; i++)
         {
-            Console.WriteLine($"{i}. {Options[i-1]}");
+            optionList += $"\n{i}. {Options[i-1]}";
         }
-        Console.Write($"Välj alternativ (1-10): ");
-        int userInput = Convert.ToInt32(Console.ReadLine());
-        if(userInput == Answer)
-        {
-            Console.WriteLine("Korrekt! Hurra!");
-            score = Points;
-        }
+        return base.ToString() + optionList;
+    }
+    public override bool CheckAnswer(string userInput)
+    {
+        int intAnswer = Convert.ToInt32(userInput);
+        if(intAnswer == Answer)
+            return true;
         else
+            return false;
+    }
+}
+class GuessYear : Question
+{
+    public int Answer{get; set;}
+    public GuessYear(string body, int points, int answer) : base(body, points)
+    {
+        Answer = answer;
+    }
+    public override bool CheckAnswer(string userInput)
+    {
+        int intAnswer = Convert.ToInt32(userInput);
+        if(intAnswer == Answer)
+            return true;
+        else
+            return false;
+    }
+}
+class OneXTwo : Question
+{
+    private List<string> Options;
+    public string Answer{get; set;}
+    public OneXTwo(string body, int points, string answer, List<string> options) : base(body, points)
+    {
+        Answer = answer;
+        Options = options;
+    }
+    public override string ToString()
+    {
+        string optionList = "\nSvarsalternativ:";
+        for(int i = 0; i < 3; i++)
         {
-            Console.WriteLine("Fel! Fan va dålig du e");
+            switch(i)
+            {
+                case 0:
+                    optionList += $"\n1. {Options[i]}";
+                break;
+                case 1:
+                    optionList += $"\nX. {Options[i]}";
+                break;
+                case 2:
+                    optionList += $"\n2. {Options[i]}";
+                break;
+            }
         }
+        return base.ToString() + optionList;
+    }
+    public override bool CheckAnswer(string userInput)
+    {
+        if(userInput == Answer)
+            return true;
+        else
+            return false;
     }
 }
